@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "revolutx": {
+      "command": "node",
+      "args": ["${REVOLUTX_MCP_PATH:-vendor/revolut-x-api/mcp/dist/index.js}"]
+    }
+  }
+}

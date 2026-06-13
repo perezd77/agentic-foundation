@@ -108,6 +108,17 @@ python -m share_alerts [--config PATH] [--dry-run] [--once] [--ignore-cooldown] 
   -v, --verbose       Print each ticker's price and which rules were checked
 ```
 
+## Related: Revolut X MCP server
+
+This repo is also wired up to connect an MCP client (Claude Code / Claude
+Desktop) to the official **Revolut X crypto exchange** MCP server, so you can
+ask an AI assistant about your crypto balances, market data, and order history
+(read-only). See [`docs/revolut-x-mcp.md`](docs/revolut-x-mcp.md). Quick start:
+`./scripts/setup-revolut-x-mcp.sh`, then open the project in Claude Code.
+
+Note this is separate from the share-alert tool above: the alert tool watches
+**stock** prices and emails you; the MCP server is for your **crypto** account.
+
 ## Disclaimer
 
 This is a personal tooling/automation project, **not financial advice**. Price
