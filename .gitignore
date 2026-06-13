@@ -1,0 +1,15 @@
+# Your real config and any secrets — keep them out of git.
+config.yaml
+*.local.yaml
+.env
+
+# De-duplication state written at runtime.
+.alert_state.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/

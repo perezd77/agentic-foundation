@@ -1,0 +1,2 @@
+# Runtime dependencies. Everything else (price fetch, email) uses the stdlib.
+PyYAML>=6.0

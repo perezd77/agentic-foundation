@@ -1,0 +1,55 @@
+name: Share alerts
+
+# Runs the alert checker on a schedule and emails you when a rule fires.
+#
+# Setup (one time):
+#   1. Settings -> Secrets and variables -> Actions -> New repository secret
+#        GMAIL_USER          your gmail address
+#        GMAIL_APP_PASSWORD  a Google app password (not your normal password)
+#   2. Commit a real `config.yaml` (it is git-ignored by default — either
+#      un-ignore it, or store it as a secret/variable and write it in a step).
+
+on:
+  schedule:
+    # Every 30 min, 13:00-21:00 UTC, Mon-Fri (covers US market hours).
+    - cron: "*/30 13-21 * * 1-5"
+  workflow_dispatch: {}          # allow manual runs from the Actions tab
+
+# Allow the de-duplication state to be committed back so alerts aren't repeated
+# across scheduled runs.
+permissions:
+  contents: write
+
+concurrency:
+  group: share-alerts
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run alert check
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python -m share_alerts --config config.yaml --state .alert_state.json
+
+      - name: Persist alert state
+        if: always()
+        run: |
+          if [ -n "$(git status --porcelain .alert_state.json)" ]; then
+            git config user.name  "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add .alert_state.json
+            git commit -m "chore: update alert dedup state [skip ci]"
+            git push
+          fi
