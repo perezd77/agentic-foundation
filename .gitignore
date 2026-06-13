@@ -1,5 +1,6 @@
-# Your real config and any secrets — keep them out of git.
-config.yaml
+# config.yaml is committed so the scheduled workflow can run it (it holds no
+# secrets — email credentials come from env vars). Use *.local.yaml for any
+# private overrides you don't want tracked.
 *.local.yaml
 .env
 
